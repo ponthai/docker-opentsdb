@@ -4,7 +4,7 @@ set -e
 
 export TSD_CONF_tsd__network__port=${TSD_CONF_tsd__network__port:-${PORT}}
 export TSD_CONF_tsd__http__cachedir=${TSD_CONF_tsd__http__cachedir:-/var/cache/opentsdb}
-export TSD_CONF_tsd__http__staticroot=${TSD_CONF_tsd__http__staticroot:-/usr/share/opentsdb/static}
+export TSD_CONF_tsd__http__staticroot=${TSD_CONF_tsd__http__staticroot:-/usr/local/share/opentsdb/static}
 
 export TSD_ROOT_LOG_LEVEL=${TSD_ROOT_LOG_LEVEL:-INFO}
 export TSD_QUERY_LOG_LEVEL=${TSD_QUERY_LOG_LEVEL:-INFO}

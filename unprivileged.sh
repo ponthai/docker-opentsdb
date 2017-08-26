@@ -28,7 +28,7 @@ if [ "${TSD_TELEMETRY_INTERVAL:-0}" != "0" ]; then
 fi
 
 if [ "${1}" = "" ]; then
-    exec /usr/share/opentsdb/bin/tsdb tsd --config /etc/opentsdb/opentsdb.conf
+    exec /usr/local/share/opentsdb/bin/tsdb tsd --config /etc/opentsdb/opentsdb.conf
 fi
 
-exec /usr/share/opentsdb/bin/tsdb "$@" --config /etc/opentsdb/opentsdb.conf
+exec /usr/local/share/opentsdb/bin/tsdb "$@" --config /etc/opentsdb/opentsdb.conf
