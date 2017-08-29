@@ -1,0 +1,48 @@
+FROM openjdk:8-jdk-alpine
+
+ENV TSDB_VERSION 2.3.0
+
+
+RUN \
+    # Add edge repo
+    echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
+    echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
+    echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+
+    # Update packages
+    apk --no-cache upgrade && \
+
+    # Install Bash
+    apk --no-cache add bash && \
+
+	apk --no-cache add make gnuplot && \
+
+    apk --update add --virtual builddeps build-base autoconf automake git python
+
+# Install SSL
+# Alpine 3.5 switched from OpenSSL to LibreSSL
+RUN apk --no-cache add libressl
+
+RUN mkdir -p /usr/src/opentsdb
+
+WORKDIR /usr/src/opentsdb
+
+RUN git clone --quiet --depth 1 https://github.com/OpenTSDB/opentsdb.git . && \
+    chmod +x build-bigtable.sh && \
+    bash build-bigtable.sh install
+
+# RUN bash build-bigtable.sh install
+
+RUN apk del builddeps && rm -rf /var/cache/apk/*
+
+RUN wget -O /usr/sbin/gosu "https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64" && \
+    echo "5b3b03713a888cee84ecbf4582b21ac9fd46c3d935ff2d7ea25dd5055d302d3c  /usr/sbin/gosu" | sha256sum -c && \
+    chmod +x /usr/sbin/gosu
+
+COPY ./logback.xml /etc/opentsdb/logback.xml
+COPY ./run.sh /run.sh
+COPY ./unprivileged.sh /unprivileged.sh
+
+VOLUME /var/cache/opentsdb
+
+ENTRYPOINT ["/run.sh"]

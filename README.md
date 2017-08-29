@@ -1,6 +1,6 @@
 # OpenTSDB in Docker
 
-This is Mesos ready OpenTSDB TSD server docker image. Tags are corresponding
+This is Google Cloud BigTable ready OpenTSDB server docker image. Tags are corresponding
 to OpenTSDB releases.
 
 ## Configuration
@@ -39,9 +39,6 @@ variables that control cleanup process:
 * `TSD_CACHE_CLEANUP_INTERVAL` interval between cleanups in seconds
 * `TSD_CACHE_MAX_AGE_MINUTES` max age of cache files in minutes
 
-## TSD telemetry
-
-`MESOS_TASK_ID` if possible or from `hostname -s` output.
 
 ## Log level
 
@@ -59,8 +56,28 @@ or higher effectively disables query logging.
 If you supply any args to the image, they will be passed to `tsdb` executable.
 This way you could run `fsck`:
 
+```bash
+docker run [...] deeone/opentsdb-bigtable:2.3.0.0 fsck --full-scan --fix-all --compact
 ```
-docker run [...] cloudflare/opentsdb:2.2.0 fsck --full-scan --fix-all --compact
+
+Creating and importin metrics:
+
+```bash
+docker run --rm -it \
+-e TSD_CONF_google__bigtable__project__id=${PROJECT_ID} \
+-e TSD_CONF_google__bigtable__instance__id=${INSTANCE_ID} \
+-e TSD_CONF_google__bigtable__zone__id=${ZONE_ID} \
+-e TSD_CONF_hbase__client__connection__impl=com.google.cloud.bigtable.hbase1_2.BigtableConnection \
+-v ~/.config/gcloud:/home/opentsdb/.config/gcloud -v /data:/data \
+ deeone/opentsdb-bigtable:2.3.0 mkmetric NYSE_A NYSE_B NYSE_C NYSE_D NYSE_E NYSE_F NYSE_G NYSE_H
+
+docker run --rm -it \
+-e TSD_CONF_google__bigtable__project__id=${PROJECT_ID} \
+-e TSD_CONF_google__bigtable__instance__id=${INSTANCE_ID} \
+-e TSD_CONF_google__bigtable__zone__id=${ZONE_ID} \
+-e TSD_CONF_hbase__client__connection__impl=com.google.cloud.bigtable.hbase1_2.BigtableConnection \
+-v ~/.config/gcloud:/home/opentsdb/.config/gcloud -v /data:/data \
+ deeone/opentsdb-bigtable:2.3.0 import /data/A.txt /data/B.txt /data/C.txt /data/D.txt /data/E.txt /data/F.txt /data/G.txt /data/H.txt
 ```
 
 Config is is still picked up from environment in this case.
@@ -88,41 +105,6 @@ cbt -instance ${INSTANCE_ID} -project ${PROJECT_ID} createfamily tsdb-uid name
 ### Running
 
 ```bash
-docker run --rm -it \
--e TSD_CONF_tsd__network__port=4242 \
--e TSD_CONF_tsd__network__bind=0.0.0.0 \
--e TSD_CONF_google__bigtable__project__id=${PROJECT_ID} \
--e TSD_CONF_google__bigtable__instance__id=${INSTANCE_ID} \
--e TSD_CONF_google__bigtable__zone__id=${ZONE_ID} \
--e TSD_CONF_hbase__client__connection__impl=com.google.cloud.bigtable.hbase1_2.BigtableConnection \
--p 4242:4242 \
--v ~/.config/gcloud:/home/opentsdb/.config/gcloud \
- deeone/opentsdb-bigtable:2.3.0 
-``` 
-
-### Importing data
-
-```bash
-docker run --rm -it \
--e TSD_CONF_tsd__network__port=4242 \
--e TSD_CONF_tsd__network__bind=0.0.0.0 \
--e TSD_CONF_google__bigtable__project__id=${PROJECT_ID} \
--e TSD_CONF_google__bigtable__instance__id=${INSTANCE_ID} \
--e TSD_CONF_google__bigtable__zone__id=${ZONE_ID} \
--e TSD_CONF_hbase__client__connection__impl=com.google.cloud.bigtable.hbase1_2.BigtableConnection \
--v ~/.config/gcloud:/home/opentsdb/.config/gcloud -v /data:/data \
- deeone/opentsdb-bigtable:2.3.0 mkmetric NYSE_A NYSE_B NYSE_C NYSE_D NYSE_E NYSE_F NYSE_G NYSE_H
-
-docker run --rm -it \
--e TSD_CONF_tsd__network__port=4242 \
--e TSD_CONF_tsd__network__bind=0.0.0.0 \
--e TSD_CONF_google__bigtable__project__id=${PROJECT_ID} \
--e TSD_CONF_google__bigtable__instance__id=${INSTANCE_ID} \
--e TSD_CONF_google__bigtable__zone__id=${ZONE_ID} \
--e TSD_CONF_hbase__client__connection__impl=com.google.cloud.bigtable.hbase1_2.BigtableConnection \
--v ~/.config/gcloud:/home/opentsdb/.config/gcloud -v /data:/data \
- deeone/opentsdb-bigtable:2.3.0 import /data/A.txt /data/B.txt /data/C.txt /data/D.txt /data/E.txt /data/F.txt /data/G.txt /data/H.txt
-
 docker run --rm -it \
 -e TSD_CONF_tsd__network__port=4242 \
 -e TSD_CONF_tsd__network__bind=0.0.0.0 \

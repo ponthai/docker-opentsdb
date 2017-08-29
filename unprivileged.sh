@@ -31,4 +31,4 @@ if [ "${1}" = "" ]; then
     exec /usr/local/share/opentsdb/bin/tsdb tsd --config /etc/opentsdb/opentsdb.conf
 fi
 
-exec /usr/local/share/opentsdb/bin/tsdb "$@" --config /etc/opentsdb/opentsdb.conf
+exec /usr/local/share/opentsdb/bin/tsdb "$@" --config /etc/opentsdb/opentsdb.conf --disable-ui
