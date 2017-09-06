@@ -25,7 +25,7 @@ export TSD_LOG_SERVICE_VERSION=${VCS_REF:-unknown}
 
 sed "s/{{ROOT_LOG_LEVEL}}/${TSD_ROOT_LOG_LEVEL}/"   -i /etc/opentsdb/logback.xml
 sed "s/{{QUERY_LOG_LEVEL}}/${TSD_QUERY_LOG_LEVEL}/" -i /etc/opentsdb/logback.xml
-sed "s/{{SERVICE_VERSION}}/${TSD_QUERY_LOG_LEVEL}/" -i /etc/opentsdb/logback.xml
+sed "s/{{SERVICE_VERSION}}/${TSD_LOG_SERVICE_VERSION}/" -i /etc/opentsdb/logback.xml
 
 chown opentsdb "${TSD_CONF_tsd__http__cachedir}"
 
