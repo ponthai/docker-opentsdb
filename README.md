@@ -1,3 +1,9 @@
+[![](https://images.microbadger.com/badges/image/deeone/opentsdb-bigtable.svg)](https://microbadger.com/images/deeone/opentsdb-bigtable "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/deeone/opentsdb-bigtable.svg)](https://microbadger.com/images/deeone/opentsdb-bigtable "Get your own version badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/commit/deeone/opentsdb-bigtable.svg)](https://microbadger.com/images/deeone/opentsdb-bigtable "Get your own commit badge on microbadger.com")
+
 # OpenTSDB in Docker
 
 This is Google Cloud BigTable ready OpenTSDB server docker image. Tags are corresponding
@@ -60,7 +66,7 @@ This way you could run `fsck`:
 docker run [...] deeone/opentsdb-bigtable:2.3.0.0 fsck --full-scan --fix-all --compact
 ```
 
-Creating and importin metrics:
+Creating and importing metrics:
 
 ```bash
 docker run --rm -it \
