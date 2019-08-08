@@ -19,6 +19,8 @@ if [ ! -e /etc/opentsdb/opentsdb.conf ]; then
     done
 fi
 
+cat /tmp/opentsdb.conf >> /etc/opentsdb/opentsdb.conf
+
 export TSD_ROOT_LOG_LEVEL=${TSD_ROOT_LOG_LEVEL:-INFO}
 export TSD_QUERY_LOG_LEVEL=${TSD_QUERY_LOG_LEVEL:-INFO}
 export TSD_LOG_SERVICE_VERSION=${VCS_REF:-unknown}
