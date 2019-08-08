@@ -31,8 +31,12 @@ RUN cd /usr/local/share/opentsdb/lib && \
       curl -O "http://central.maven.org/maven2/ch/qos/logback/contrib/logback-json-core/0.1.5/logback-json-core-0.1.5.jar"; \
       cd -; }
 
+RUN rm -rf /usr/local/share/opentsdb/lib/netty-3.10.6.Final.jar
+
+RUN apt-get install -y maven
+
 RUN apt-get install -y maven && \
-    git clone https://github.com/OpenTSDB/opentsdb-rpc-kafka.git /opt/opentsdb-rpc-kafka && \
+    git clone -b 2.3 https://github.com/OpenTSDB/opentsdb-rpc-kafka.git /opt/opentsdb-rpc-kafka && \
     cd /opt/opentsdb-rpc-kafka && \
     mvn package -Pshaded && \
     mkdir -p /opt/opentsdb/plugin && \
